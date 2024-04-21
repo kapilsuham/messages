@@ -59,6 +59,7 @@ export async function POST(request:Request) {
             messages:[]   
         })
         await newUser.save()
+        
     }
     // send verification mail
     const emailResponse=await sendVerificationEmail(

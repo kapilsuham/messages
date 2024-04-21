@@ -17,21 +17,21 @@ export const authOptions:NextAuthOptions={
               async authorize(credentials:any):Promise<any> {
                 await dbConnect()
                 try {
-                    const User=await UserModel.findOne({
+                    const user=await UserModel.findOne({
                         $or:[
                             {email:credentials.identifier},
                             {userName:credentials.identifier}
                         ]
                     })
-                    if (!User) {
+                    if (!user) {
                         throw new Error("no user found with this email")
                     }
-                    if (!User.isVerified) {
+                    if (!user.isVerified) {
                         throw new Error("user is not verified")
                     }
-                    const isPasswordCorrect=await bcrypt.compare(credentials.password,User.password)
+                    const isPasswordCorrect=await bcrypt.compare(credentials.password,user.password)
                     if (isPasswordCorrect) {
-                        return User
+                        return user
                     }
                     else{
                         throw new Error("invalid Password")
@@ -52,6 +52,7 @@ export const authOptions:NextAuthOptions={
                 token.userName=user.userName
             }
             return token
+            
         },
         async session({ session, token }) {
             if (token) {
